@@ -1,6 +1,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import AudioRecorder from "./components/AudioRecorder";
+import AudioUploader from "./components/AudioUploader";
 
 export default function Home() {
   return (
@@ -23,7 +24,7 @@ export default function Home() {
 
           <span>or</span>
 
-          <button type="button">Upload audio</button>
+          <AudioUploader />
         </div>
       </section>
     </main>
