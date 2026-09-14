@@ -72,3 +72,24 @@ h1 {
   background: white;
   cursor: pointer;
 }
+
+.recording-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.recording-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: red;
+}
+
+.recording-time {
+  margin: 0 0 16px;
+  font-size: 28px;
+  font-variant-numeric: tabular-nums;
+}

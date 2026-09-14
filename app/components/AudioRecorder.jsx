@@ -1,13 +1,27 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function AudioRecorder() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
 
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  useEffect(() => {
+  if (!isRecording) {
+    return;
+  }
+
+  const timer = setInterval(() => {
+    setRecordingSeconds((seconds) => seconds + 1);
+  }, 1000);
+
+  return () => {
+    clearInterval(timer);
+  };
+}, [isRecording]);
 
   async function startRecording() {
     try {
@@ -64,12 +78,32 @@ export default function AudioRecorder() {
     audioChunksRef.current = [];
   }
 
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+
+    return `${String(minutes).padStart(2, "0")}:${String(
+        remainingSeconds
+    ).padStart(2, "0")}`;
+  }
+
   return (
     <div>
       {isRecording ? (
-        <button type="button" onClick={stopRecording}>
-          Stop recording
-        </button>
+        <div>
+            <div className="recording-status">
+            <span className="recording-dot" />
+            <span>Recording</span>
+            </div>
+
+            <p className="recording-time">
+            {formatTime(recordingSeconds)}
+            </p>
+
+            <button type="button" onClick={stopRecording}>
+            Stop recording
+            </button>
+        </div>
       ) : (
         <button type="button" onClick={startRecording}>
           Start recording
