@@ -1,30 +1,56 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { MAX_RECORDING_SECONDS } from "../../lib/constants";
 
 export default function AudioRecorder() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const [error, setError] = useState("");
 
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+
   useEffect(() => {
-  if (!isRecording) {
-    return;
-  }
+    if (!isRecording) {
+      return;
+    }
 
-  const timer = setInterval(() => {
-    setRecordingSeconds((seconds) => seconds + 1);
-  }, 1000);
+    const timer = setInterval(() => {
+      setRecordingSeconds((seconds) => {
+        const nextSeconds = seconds + 1;
 
-  return () => {
-    clearInterval(timer);
-  };
-}, [isRecording]);
+        if (nextSeconds >= MAX_RECORDING_SECONDS) {
+          const recorder = mediaRecorderRef.current;
+
+          if (recorder && recorder.state === "recording") {
+            recorder.stop();
+          }
+
+          setIsRecording(false);
+          setError("The recording reached the 10-minute maximum.");
+
+          return MAX_RECORDING_SECONDS;
+        }
+
+        return nextSeconds;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [isRecording]);
 
   async function startRecording() {
+    setError("");
+
     try {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        throw new Error("Microphone access is not supported by this browser.");
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
@@ -51,10 +77,16 @@ export default function AudioRecorder() {
         stream.getTracks().forEach((track) => track.stop());
       };
 
+      setRecordingSeconds(0);
+
       recorder.start();
       setIsRecording(true);
     } catch (error) {
       console.error("Could not access microphone:", error);
+
+      setError(
+        "We couldn't access your microphone. Check your browser permissions and try again."
+      );
     }
   }
 
@@ -83,26 +115,32 @@ export default function AudioRecorder() {
     const remainingSeconds = seconds % 60;
 
     return `${String(minutes).padStart(2, "0")}:${String(
-        remainingSeconds
+      remainingSeconds
     ).padStart(2, "0")}`;
   }
 
   return (
     <div>
+      {error && (
+        <p className="error-message" role="alert">
+          {error}
+        </p>
+      )}
+
       {isRecording ? (
         <div>
-            <div className="recording-status">
+          <div className="recording-status">
             <span className="recording-dot" />
             <span>Recording</span>
-            </div>
+          </div>
 
-            <p className="recording-time">
+          <p className="recording-time">
             {formatTime(recordingSeconds)}
-            </p>
+          </p>
 
-            <button type="button" onClick={stopRecording}>
+          <button type="button" onClick={stopRecording}>
             Stop recording
-            </button>
+          </button>
         </div>
       ) : (
         <button type="button" onClick={startRecording}>
