@@ -6,14 +6,22 @@ import { validateAudioFile } from "../../lib/audioValidation";
 export default function AudioUploader() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState("");
+  const [isChecking, setIsChecking] = useState(false);
 
-  function handleFileChange(event) {
-    const file = event.target.files?.[0];
+  async function handleFileChange(event) {
+  const file = event.target.files?.[0];
 
-    setError("");
-    setSelectedFile(null);
+  setError("");
+  setSelectedFile(null);
 
-    const result = validateAudioFile(file);
+  if (!file) {
+    return;
+  }
+
+  setIsChecking(true);
+
+  try {
+    const result = await validateAudioFile(file);
 
     if (!result.valid) {
       setError(result.message);
@@ -21,7 +29,14 @@ export default function AudioUploader() {
     }
 
     setSelectedFile(file);
+  } catch (error) {
+    console.error("Could not validate audio file:", error);
+
+    setError("We couldn't read this audio file. Please try another file.");
+  } finally {
+    setIsChecking(false);
   }
+}
 
   return (
     <div>
@@ -33,6 +48,8 @@ export default function AudioUploader() {
         accept=".mp3,.wav,.m4a,audio/mpeg,audio/wav,audio/mp4"
         onChange={handleFileChange}
       />
+
+      {isChecking && <p>Checking audio file...</p>}
 
       {error && (
         <p className="error-message" role="alert">
