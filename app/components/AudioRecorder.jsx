@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MAX_RECORDING_SECONDS } from "../../lib/constants";
 
-export default function AudioRecorder() {
+export default function AudioRecorder({ onAudioSelected }) {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
@@ -70,6 +70,8 @@ export default function AudioRecorder() {
         const audioBlob = new Blob(audioChunksRef.current, {
           type: recorder.mimeType,
         });
+
+        onAudioSelected(audioBlob);
 
         const url = URL.createObjectURL(audioBlob);
         setAudioUrl(url);

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { validateAudioFile } from "../../lib/audioValidation";
 
-export default function AudioUploader() {
+export default function AudioUploader({ onAudioSelected }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState("");
   const [isChecking, setIsChecking] = useState(false);
@@ -29,6 +29,7 @@ export default function AudioUploader() {
     }
 
     setSelectedFile(file);
+    onAudioSelected(file);
   } catch (error) {
     console.error("Could not validate audio file:", error);
 

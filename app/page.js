@@ -1,9 +1,16 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useState } from "react";
 import AudioRecorder from "./components/AudioRecorder";
 import AudioUploader from "./components/AudioUploader";
 
 export default function Home() {
+
+  const [selectedAudio, setSelectedAudio] = useState(null);
+
+  function handleAudioSelected(audio) {
+  setSelectedAudio(audio);
+}
   return (
     <main className="app">
       <section className="intro">
@@ -20,13 +27,18 @@ export default function Home() {
         <h2>Add your audio</h2>
 
         <div className="input-options">
-          <AudioRecorder />
+          <AudioRecorder onAudioSelected={handleAudioSelected} />
 
           <span>or</span>
 
-          <AudioUploader />
+          <AudioUploader onAudioSelected={handleAudioSelected} />
         </div>
       </section>
+      {selectedAudio && (
+      <p>
+        Audio is ready for analysis.
+      </p>
+    )}
     </main>
   );
 }
