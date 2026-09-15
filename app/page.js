@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import styles from "./page.module.css";
 import { useState } from "react";
 import AudioRecorder from "./components/AudioRecorder";
@@ -12,6 +11,8 @@ export default function Home() {
   const [selectedAudio, setSelectedAudio] = useState(null);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [analysisError, setAnalysisError] = useState("");
 
   function handleAudioSelected(audio) {
   setSelectedAudio(audio);
@@ -27,26 +28,64 @@ async function handleAnalyze() {
   }
 
   setIsAnalyzing(true);
+  setUploadProgress(0);
+  setAnalysisError("");
 
   try {
     const formData = new FormData();
 
     formData.append("audio", selectedAudio, "recording.webm");
 
-    const response = await fetch("/api/analyze", {
-      method: "POST",
-      body: formData,
+    const data = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.open("POST", "/api/analyze");
+
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const progress = Math.round(
+            (event.loaded / event.total) * 100
+          );
+
+          setUploadProgress(progress);
+        }
+      };
+
+      xhr.onload = () => {
+        try {
+          const responseData = JSON.parse(xhr.responseText);
+
+          if (xhr.status < 200 || xhr.status >= 300) {
+            reject(
+              new Error(
+                responseData.error || "Analysis failed."
+              )
+            );
+            return;
+          }
+
+          resolve(responseData);
+        } catch {
+          reject(new Error("Invalid response from the server."));
+        }
+      };
+
+      xhr.onerror = () => {
+        reject(new Error("Could not connect to the analysis server."));
+      };
+
+      xhr.send(formData);
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "Analysis failed.");
-    }
-
+    setUploadProgress(100);
     setAnalysisResult(data);
   } catch (error) {
     console.error("Analysis failed:", error);
+
+    setAnalysisError(
+    error.message ||
+      "We couldn't analyze the audio. Please try again."
+    );
   } finally {
     setIsAnalyzing(false);
   }
@@ -88,28 +127,41 @@ async function handleAnalyze() {
       </p>
     )}
 
-    {selectedAudio && (
-  <button
-    type="button"
-    onClick={handleAnalyze}
-    disabled={isAnalyzing}
-  >
-    {isAnalyzing ? "Analyzing..." : "Analyze audio"}
-  </button>
-)}
-{analysisResult && (
-  <section className={styles.results}>
-    <h2>Transcript</h2>
-    <p>{analysisResult.transcript}</p>
-  </section>
-)}
-{analysisResult && (
-  <section className={styles.results}>
-    <h2>Word cloud</h2>
+     {selectedAudio && (
+      <button
+        type="button"
+        onClick={handleAnalyze}
+        disabled={isAnalyzing}
+      >
+        {isAnalyzing ? "Analyzing..." : "Analyze audio"}
+      </button>
+  
+    )}
+    {isAnalyzing && (
+      <p>
+        Uploading and analyzing: {uploadProgress}%
+      </p>
+    )}
 
-    <WordCloud terms={analysisResult.terms} />
-  </section>
-)}
+    {analysisError && (
+      <p className="error-message" role="alert">
+        {analysisError}
+      </p>
+    )}
+
+    {analysisResult && (
+      <section className={styles.results}>
+        <h2>Transcript</h2>
+        <p>{analysisResult.transcript}</p>
+      </section>
+    )}
+    {analysisResult && (
+      <section className={styles.results}>
+        <h2>Word cloud</h2>
+
+        <WordCloud terms={analysisResult.terms} />
+      </section>
+    )}
     </main>
   );
 }

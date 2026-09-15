@@ -209,20 +209,13 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-
-  gap: 24px 28px;
-
-  width: 100%;
-  min-height: 280px;
-  box-sizing: border-box;
-
-  padding: 36px;
-
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-
-  box-shadow: 0 4px 20px rgba(16, 24, 40, 0.03);
+  align-content: center;
+  gap: 12px 18px;
+  min-height: 220px;
+  padding: 24px 20px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  background: #fff;
 }
 
 .word-cloud-term {

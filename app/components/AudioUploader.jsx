@@ -9,6 +9,7 @@ export default function AudioUploader({
   disabled = false,
 }) {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [duration, setDuration] = useState(0);
   const [error, setError] = useState("");
   const [isChecking, setIsChecking] = useState(false);
 
@@ -17,6 +18,7 @@ export default function AudioUploader({
 
     setError("");
     setSelectedFile(null);
+    setDuration(0);
 
     if (!file) {
       return;
@@ -33,11 +35,14 @@ export default function AudioUploader({
       }
 
       setSelectedFile(file);
+      setDuration(result.duration);
       onAudioSelected(file);
     } catch (error) {
       console.error("Could not validate audio file:", error);
 
-      setError("We couldn't read this audio file. Please try another file.");
+      setError(
+        "We couldn't read this audio file. Please try another file."
+      );
     } finally {
       setIsChecking(false);
     }
@@ -45,8 +50,18 @@ export default function AudioUploader({
 
   function handleClear() {
     setSelectedFile(null);
+    setDuration(0);
     setError("");
     onAudioCleared();
+  }
+
+  function formatDuration(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+
+    return `${String(minutes).padStart(2, "0")}:${String(
+      remainingSeconds
+    ).padStart(2, "0")}`;
   }
 
   return (
@@ -56,7 +71,7 @@ export default function AudioUploader({
       <input
         id="audio-upload"
         type="file"
-        accept=".mp3,.wav,.m4a,audio/mpeg,audio/wav,audio/mp4"
+        accept=".mp3,.wav,.m4a,.aac,.ogg,.webm,.flac,audio/*"
         onChange={handleFileChange}
         disabled={disabled || isChecking}
       />
@@ -72,6 +87,14 @@ export default function AudioUploader({
       {selectedFile && (
         <div>
           <p>Selected: {selectedFile.name}</p>
+
+          <p>
+            Size: {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+          </p>
+
+          <p>
+            Duration: {formatDuration(duration)}
+          </p>
 
           <button type="button" onClick={handleClear}>
             Remove
