@@ -52,24 +52,25 @@ async function handleAnalyze() {
   }
 }
   return (
-    <main className="app">
-      <section className="intro">
+    <main className={styles.page}>
+      <section className={styles.intro}>
         <p className="eyebrow">Mentorship session tool</p>
 
-        <h1>Audio Word Cloud</h1>
+        <h1>VocaCloud</h1>
 
         <p className="description">
           Record or upload a conversation and turn it into a visual summary.
         </p>
       </section>
 
-      <section className="audio-section">
+      <section className={styles["audio-section"]}>
         <h2>Add your audio</h2>
 
-        <div className="input-options">
+        <div className={styles["input-options"]}>
           <AudioRecorder
             onAudioSelected={handleAudioSelected}
             onAudioCleared={handleAudioCleared}
+            disabled={selectedAudio !== null || isAnalyzing}
           />
 
           <span>or</span>
@@ -77,6 +78,7 @@ async function handleAnalyze() {
           <AudioUploader
             onAudioSelected={handleAudioSelected}
             onAudioCleared={handleAudioCleared}
+            disabled={selectedAudio !== null || isAnalyzing}
           />
         </div>
       </section>

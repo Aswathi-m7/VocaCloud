@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Audio Word Cloud",
+  title: "VocaCloud",
   description: "Turn an audio recording into a visual word cloud.",
   other: {
     "x-brief-ref": "TFG-WD-8823",

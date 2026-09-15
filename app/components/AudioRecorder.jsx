@@ -6,6 +6,7 @@ import { MAX_RECORDING_SECONDS } from "../../lib/constants";
 export default function AudioRecorder({
   onAudioSelected,
   onAudioCleared,
+  disabled = false,
 }) {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
@@ -149,7 +150,11 @@ export default function AudioRecorder({
           </button>
         </div>
       ) : (
-        <button type="button" onClick={startRecording}>
+        <button
+  type="button"
+  onClick={startRecording}
+  disabled={disabled}
+>
           Start recording
         </button>
       )}
