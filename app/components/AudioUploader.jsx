@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { validateAudioFile } from "../../lib/audioValidation";
 
-export default function AudioUploader({ onAudioSelected }) {
+export default function AudioUploader({
+  onAudioSelected,
+  onAudioCleared,
+}) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState("");
   const [isChecking, setIsChecking] = useState(false);
@@ -39,6 +42,12 @@ export default function AudioUploader({ onAudioSelected }) {
   }
 }
 
+function handleClear() {
+  setSelectedFile(null);
+  setError("");
+  onAudioCleared();
+}
+
   return (
     <div>
       <label htmlFor="audio-upload">Choose an audio file</label>
@@ -59,10 +68,16 @@ export default function AudioUploader({ onAudioSelected }) {
       )}
 
       {selectedFile && (
-        <p>
-          Selected: {selectedFile.name}
-        </p>
-      )}
+  <div>
+    <p>
+      Selected: {selectedFile.name}
+    </p>
+
+    <button type="button" onClick={handleClear}>
+      Remove
+    </button>
+  </div>
+)}
     </div>
   );
 }

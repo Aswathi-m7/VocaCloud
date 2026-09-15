@@ -11,6 +11,10 @@ export default function Home() {
   function handleAudioSelected(audio) {
   setSelectedAudio(audio);
 }
+
+function handleAudioCleared() {
+  setSelectedAudio(null);
+}
   return (
     <main className="app">
       <section className="intro">
@@ -27,11 +31,17 @@ export default function Home() {
         <h2>Add your audio</h2>
 
         <div className="input-options">
-          <AudioRecorder onAudioSelected={handleAudioSelected} />
+          <AudioRecorder
+            onAudioSelected={handleAudioSelected}
+            onAudioCleared={handleAudioCleared}
+          />
 
           <span>or</span>
 
-          <AudioUploader onAudioSelected={handleAudioSelected} />
+          <AudioUploader
+            onAudioSelected={handleAudioSelected}
+            onAudioCleared={handleAudioCleared}
+          />
         </div>
       </section>
       {selectedAudio && (

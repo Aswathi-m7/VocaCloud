@@ -3,7 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { MAX_RECORDING_SECONDS } from "../../lib/constants";
 
-export default function AudioRecorder({ onAudioSelected }) {
+export default function AudioRecorder({
+  onAudioSelected,
+  onAudioCleared,
+}) {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
@@ -110,6 +113,7 @@ export default function AudioRecorder({ onAudioSelected }) {
 
     setAudioUrl(null);
     audioChunksRef.current = [];
+    onAudioCleared();
   }
 
   function formatTime(seconds) {
