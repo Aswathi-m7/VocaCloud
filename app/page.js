@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./page.module.css";
 import { useState } from "react";
@@ -7,6 +9,7 @@ import AudioUploader from "./components/AudioUploader";
 export default function Home() {
 
   const [selectedAudio, setSelectedAudio] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   function handleAudioSelected(audio) {
   setSelectedAudio(audio);
@@ -14,6 +17,18 @@ export default function Home() {
 
 function handleAudioCleared() {
   setSelectedAudio(null);
+}
+
+function handleAnalyze() {
+  if (!selectedAudio) {
+    return;
+  }
+
+  setIsAnalyzing(true);
+
+  setTimeout(() => {
+    setIsAnalyzing(false);
+  }, 1500);
 }
   return (
     <main className="app">
@@ -49,6 +64,16 @@ function handleAudioCleared() {
         Audio is ready for analysis.
       </p>
     )}
+
+    {selectedAudio && (
+  <button
+    type="button"
+    onClick={handleAnalyze}
+    disabled={isAnalyzing}
+  >
+    {isAnalyzing ? "Analyzing..." : "Analyze audio"}
+  </button>
+)}
     </main>
   );
 }
