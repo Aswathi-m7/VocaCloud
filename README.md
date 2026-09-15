@@ -168,5 +168,3 @@ If I had another week, I would improve the project in the following areas:
 * Improve accessibility and keyboard navigation
 * Add more testing for different audio formats and edge cases
 * Improve the visual design for desktop and mobile screens
-
-```
