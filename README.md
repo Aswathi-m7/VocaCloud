@@ -1,7 +1,24 @@
 ````markdown
 # VocaCloud
 
-VocaCloud is a web application that converts an audio recording into a transcript and a visual word cloud. The user can either record audio directly in the browser or upload an existing audio file. The audio is analyzed using Google's Gemini API, which generates the transcript and identifies the prominent topics and terms discussed.
+## Project Details
+
+**Project Name:** VocaCloud
+
+**Author:** Aswathi M, Developed for project/task submission for Finquo Junior HR.
+
+**Project Type:** Web Application
+
+**Purpose:**  
+VocaCloud is a web application that converts an audio recording into a transcript and a visual word cloud. It allows users to either record audio directly through their browser or upload an existing audio file. The audio is processed using Google's Gemini API to generate the transcript and identify prominent topics and terms.
+
+**Live Demo:**  
+https://voca-cloud.vercel.app
+
+**GitHub Repository:**  
+https://github.com/Aswathi-m7/VocaCloud
+
+---
 
 ## Features
 
@@ -441,22 +458,14 @@ npm start
 
 ## Deployment
 
-The application can be deployed on a Next.js-compatible hosting platform.
+VocaCloud is deployed using Vercel.
 
-When deploying, configure the following environment variable:
+**Live Application:**  
+https://voca-cloud.vercel.app
+
+The Gemini API key is configured as an environment variable in the deployment platform and is not committed to the repository.
+
+The required environment variable is:
 
 ```text
 GEMINI_API_KEY
-```
-
-The API key should be added through the deployment platform's environment-variable configuration and should not be committed to the repository.
-
-## Author
-
-Developed by Aswathi M for project/task submission for Finquo Junior HR.
-
-**Project Name:** VocaCloud
-
-**Purpose:** Audio transcription, topic extraction, and visual word-cloud generation.
-
-```
