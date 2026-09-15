@@ -1,4 +1,3 @@
-````markdown
 # VocaCloud
 
 **Author:** Aswathi M
