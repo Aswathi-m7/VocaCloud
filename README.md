@@ -151,6 +151,7 @@ The Gemini API key is configured as an environment variable in the deployment en
 
 If I had another week, I would improve the project in the following areas:
 
+* Silent Audio Handling
 * Improve the word-cloud layout and term positioning
 * Add better error messages and recovery states
 * Add a history of previous analyses
