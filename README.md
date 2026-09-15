@@ -117,6 +117,16 @@ I used the term counts returned by the AI service to determine the font size of 
 
 I deliberately kept the word-cloud generation simple instead of adding a separate word-cloud library.
 
+### 4. Silent Audio Handling
+
+I decided not to implement a separate silent-audio detection mechanism.
+
+The application already validates the audio format, file size, and duration before analysis. Detecting whether an audio file actually contains meaningful speech would require additional audio-processing logic and threshold tuning. A simple volume-based check could also incorrectly reject valid recordings, especially when the speaker is quiet or the recording has low microphone volume.
+
+For the scope of this project, I chose to keep the input validation focused on objective constraints that can be reliably checked and let the AI service handle the submitted audio. This keeps the application simpler while avoiding false rejection of valid recordings.
+
+If I had another week, I would consider adding a more robust silence/speech detection step, such as voice-activity detection, and evaluate it against different recording conditions before integrating it.
+
 ## Libraries and External Components
 
 The project uses the following libraries and frameworks:
