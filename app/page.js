@@ -96,13 +96,13 @@ async function handleAnalyze() {
   </button>
 )}
 {analysisResult && (
-  <section>
+  <section className={styles.results}>
     <h2>Transcript</h2>
     <p>{analysisResult.transcript}</p>
   </section>
 )}
 {analysisResult && (
-  <section>
+  <section className={styles.results}>
     <h2>Word cloud</h2>
 
     <WordCloud terms={analysisResult.terms} />

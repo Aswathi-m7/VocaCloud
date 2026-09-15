@@ -28,8 +28,10 @@ export default function WordCloud({ terms }) {
       {terms.map((term) => (
         <span
           key={term.word}
-          className={styles["word-cloud-term"]}
-          style={{ fontSize: `${getFontSize(term.count)}px` }}
+          className="word-cloud-term"
+          style={{
+          fontSize: `${getFontSize(term.count)}px`,
+        }}
         >
           {term.word}
         </span>

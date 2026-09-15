@@ -103,3 +103,26 @@ h1 {
   color: #8a1c1c;
   line-height: 1.5;
 }
+
+@media (max-width: 600px) {
+  .input-options {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .input-options > span {
+    text-align: center;
+  }
+
+  .input-options button {
+    width: 100%;
+  }
+
+  .input-options input[type="file"] {
+    width: 100%;
+    max-width: 100%;
+  }
+}

@@ -107,6 +107,7 @@ a.secondary {
   }
 }
 
+/* Mobile layout */
 @media (max-width: 600px) {
   .main {
     padding: 48px 24px;
@@ -121,8 +122,42 @@ a.secondary {
     line-height: 40px;
     letter-spacing: -1.92px;
   }
+
+  /* Stack recording and upload options vertically */
+  .input-options {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .input-options > span {
+    text-align: center;
+  }
+
+  .input-options button {
+    width: 100%;
+  }
+
+  .input-options input[type="file"] {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Word cloud */
+  .word-cloud {
+    min-height: 260px;
+    padding: 24px 16px;
+    gap: 16px 20px;
+  }
+
+  .word-cloud-term {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
 }
 
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   .logo {
     filter: invert();
@@ -149,20 +184,40 @@ a.secondary {
   border-radius: 6px;
 }
 
+/* Word cloud */
 .word-cloud {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 16px 24px;
-  min-height: 300px;
-  padding: 32px;
+  gap: 16px 20px;
+  min-height: 260px;
+  padding: 24px 16px;
   border: 1px solid #ddd;
   border-radius: 16px;
+  background: #fff;
 }
 
 .word-cloud-term {
   display: inline-block;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.1;
+  text-align: center;
+}
+
+/* Analysis results */
+.results {
+  width: 100%;
+  margin-top: 32px;
+}
+
+.results h2 {
+  margin-bottom: 16px;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.results p {
+  margin: 0;
+  line-height: 1.6;
 }

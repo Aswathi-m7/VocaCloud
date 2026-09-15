@@ -22,11 +22,11 @@ export async function POST(request) {
     const base64Audio = Buffer.from(arrayBuffer).toString("base64");
 
     const interaction = await ai.interactions.create({
-  model: "gemini-3.6-flash",
-  input: [
-    {
-      type: "text",
-      text: `
+      model: "gemini-3.6-flash",
+      input: [
+        {
+          type: "text",
+          text: `
 Transcribe this audio and identify the prominent topics and terms discussed.
 
 Return your response as valid JSON with exactly this structure:
@@ -48,27 +48,39 @@ Rules for terms:
 - Keep multi-word phrases when they represent a meaningful concept.
 - Count how often each selected term or phrase appears in the transcript.
 - Do not include explanations outside the JSON.
-      `,
-    },
-    {
-      type: "audio",
-      data: base64Audio,
-      mime_type: audio.type,
-    },
-  ],
-});
+          `,
+        },
+        {
+          type: "audio",
+          data: base64Audio,
+          mime_type: audio.type,
+        },
+      ],
+    });
+
+    let outputText = interaction.output_text;
+
+    // Remove Markdown code fences if Gemini returns them.
+    outputText = outputText
+      .replace(/^```json\s*/i, "")
+      .replace(/^```\s*/i, "")
+      .replace(/\s*```$/i, "")
+      .trim();
+
+    const result = JSON.parse(outputText);
 
     return Response.json({
-      transcript: interaction.output_text,
+      transcript: result.transcript,
+      terms: result.terms,
     });
   } catch (error) {
     console.error("Audio analysis failed:", error);
 
-    const result = JSON.parse(interaction.output_text);
-
-return Response.json({
-  transcript: result.transcript,
-  terms: result.terms,
-});
+    return Response.json(
+      {
+        error: "Failed to analyze the audio.",
+      },
+      { status: 500 }
+    );
   }
 }
