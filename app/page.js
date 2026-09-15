@@ -5,10 +5,12 @@ import styles from "./page.module.css";
 import { useState } from "react";
 import AudioRecorder from "./components/AudioRecorder";
 import AudioUploader from "./components/AudioUploader";
+import WordCloud from "./components/WordCloud";
 
 export default function Home() {
 
   const [selectedAudio, setSelectedAudio] = useState(null);
+  const [analysisResult, setAnalysisResult] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   function handleAudioSelected(audio) {
@@ -19,16 +21,35 @@ function handleAudioCleared() {
   setSelectedAudio(null);
 }
 
-function handleAnalyze() {
+async function handleAnalyze() {
   if (!selectedAudio) {
     return;
   }
 
   setIsAnalyzing(true);
 
-  setTimeout(() => {
+  try {
+    const formData = new FormData();
+
+    formData.append("audio", selectedAudio, "recording.webm");
+
+    const response = await fetch("/api/analyze", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Analysis failed.");
+    }
+
+    setAnalysisResult(data);
+  } catch (error) {
+    console.error("Analysis failed:", error);
+  } finally {
     setIsAnalyzing(false);
-  }, 1500);
+  }
 }
   return (
     <main className="app">
@@ -73,6 +94,19 @@ function handleAnalyze() {
   >
     {isAnalyzing ? "Analyzing..." : "Analyze audio"}
   </button>
+)}
+{analysisResult && (
+  <section>
+    <h2>Transcript</h2>
+    <p>{analysisResult.transcript}</p>
+  </section>
+)}
+{analysisResult && (
+  <section>
+    <h2>Word cloud</h2>
+
+    <WordCloud terms={analysisResult.terms} />
+  </section>
 )}
     </main>
   );

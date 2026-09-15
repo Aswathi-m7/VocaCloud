@@ -148,3 +148,21 @@ a.secondary {
   padding: 0.1em 0.4em;
   border-radius: 6px;
 }
+
+.word-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px 24px;
+  min-height: 300px;
+  padding: 32px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+}
+
+.word-cloud-term {
+  display: inline-block;
+  font-weight: 700;
+  line-height: 1;
+}
